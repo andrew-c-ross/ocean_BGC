@@ -8491,7 +8491,7 @@ write (stdlogunit, generic_COBALT_nml)
          if (abs(imbal).gt.1.0e-10) then
           write(mesg,'("biological source/sink imbalance: Carbon, imbalance of ",(1pe12.4)," found at i,j,k = ", &
                   & 3(1x,i3))') imbal, i, j, k
-          call MOM_error(FATAL, "generic_COBALT_update_from_source: "//trim(mesg))
+          call mpp_error(FATAL, "generic_COBALT_update_from_source: "//trim(mesg))
          endif
 
          post_totp(i,j,k) = (cobalt%p_po4(i,j,k,tau) + cobalt%p_ndi(i,j,k,tau)*phyto(1)%p_2_n_static + &
