@@ -6494,7 +6494,8 @@ write (stdlogunit, generic_COBALT_nml)
     real :: imbal
     integer :: stdoutunit, imbal_flag, outunit
 
-
+    character(len=128) :: mesg
+    
     r_dt = 1.0 / dt
 
     call g_tracer_get_common(isc,iec,jsc,jec,isd,ied,jsd,jed,nk,ntau,&
@@ -8488,8 +8489,9 @@ write (stdlogunit, generic_COBALT_nml)
                     cobalt%p_nlgz(i,j,k,tau)))*grid_tmask(i,j,k)
         imbal = (post_totc(i,j,k) - pre_totc(i,j,k))*86400.0/dt*1.03e6
          if (abs(imbal).gt.1.0e-10) then
-           call mpp_error(FATAL,&
-           '==>biological source/sink imbalance (generic_COBALT_update_from_source): Carbon')
+          write(mesg,'("biological source/sink imbalance: Carbon, imbalance of ",(1pe12.4)," found at i,j,k = ", &
+                  & 3(1x,i3))') imbal, i, j, k
+          call MOM_error(FATAL, "generic_COBALT_update_from_source: "//trim(mesg))
          endif
 
          post_totp(i,j,k) = (cobalt%p_po4(i,j,k,tau) + cobalt%p_ndi(i,j,k,tau)*phyto(1)%p_2_n_static + &
